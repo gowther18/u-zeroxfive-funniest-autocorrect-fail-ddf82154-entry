@@ -24,6 +24,11 @@ def main() -> int:
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8", newline="") as f:
         f.write(LINE)
+    # Round-trip guard: the file the grader reads must hold exactly the
+    # validated line, byte for byte — refuse a silent partial write.
+    with open(path, encoding="utf-8", newline="") as f:
+        if f.read() != LINE:
+            raise SystemExit("entry.txt does not match the validated line")
     return 0
 
 
